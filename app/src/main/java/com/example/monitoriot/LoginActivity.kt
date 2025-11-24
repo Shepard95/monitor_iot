@@ -63,6 +63,8 @@ class LoginActivity : AppCompatActivity() {
         binding.btnGoToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+
+        showGoogleSignInBottomSheet()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -90,6 +92,29 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Fallo la autenticación.", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun showGoogleSignInBottomSheet() {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(getString(R.string.default_web_client_id))
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        lifecycleScope.launch {
+            try {
+                val result = credentialManager.getCredential(
+                    context = this@LoginActivity,
+                    request = request
+                )
+                handleSignInResult(result)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en Bottom Sheet de sign in", e)
+            }
+        }
     }
 
     private fun signInWithGoogleButton() {

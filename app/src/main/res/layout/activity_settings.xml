@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".SettingsActivity">
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre de Usuario"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="email@ejemplo.com" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Configurar Rango Mínimo (cm)" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderMinRange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="150"
+        android:valueTo="250"
+        android:stepSize="1.0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Configurar Rango Máximo (cm)" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderMaxRange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="50"
+        android:valueTo="150"
+        android:stepSize="1.0" />
+
+</LinearLayout>

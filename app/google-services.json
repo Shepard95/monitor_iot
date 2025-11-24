@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "904963265656",
+    "project_id": "water-monitor-level",
+    "storage_bucket": "water-monitor-level.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904963265656:android:411eafd798c960b6fe498d",
+        "android_client_info": {
+          "package_name": "com.example.monitoriot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904963265656-tlo8vc9ac28ss192okd8q7e9k7ms06dp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYaAiAKHQrtLcFY7fs4u0n0Vm5UQr1Lrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904963265656-tlo8vc9ac28ss192okd8q7e9k7ms06dp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

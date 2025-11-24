@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_low"
+        android:icon="@drawable/ic_arrow_down"
+        android:title="Nivel Bajo" />
+
+    <item
+        android:id="@+id/navigation_mid"
+        android:icon="@drawable/ic_linear_scale"
+        android:title="Nivel Medio" />
+
+    <item
+        android:id="@+id/navigation_high"
+        android:icon="@drawable/ic_arrow_up"
+        android:title="Nivel Alto" />
+
+</menu>

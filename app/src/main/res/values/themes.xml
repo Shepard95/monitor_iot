@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme (without ActionBar) -->
+    <style name="Theme.MonitorIOT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorButtonText</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorSecondaryVariant">@color/colorAccent</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <!-- Theme for activities that DO need an ActionBar -->
+    <style name="Theme.MonitorIOT.WithActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorButtonText</item>
+    </style>
+
+</resources>

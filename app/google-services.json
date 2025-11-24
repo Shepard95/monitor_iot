@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "904963265656-tlo8vc9ac28ss192okd8q7e9k7ms06dp.apps.googleusercontent.com",
+          "client_id": "904963265656-6qrl4trc6mkgfpqcekant8gtd1d2o644.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.monitoriot",
+            "certificate_hash": "2b5846a1b6ad643cffb2b2e19fb8e9e9547ed0fc"
+          }
+        },
+        {
+          "client_id": "904963265656-o237sn8btn8onvkonn7s788lo4dtuut2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "904963265656-tlo8vc9ac28ss192okd8q7e9k7ms06dp.apps.googleusercontent.com",
+              "client_id": "904963265656-o237sn8btn8onvkonn7s788lo4dtuut2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

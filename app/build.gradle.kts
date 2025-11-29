@@ -31,7 +31,6 @@ android {
 }
 
 dependencies {
-    // Versiones de Firebase especificadas manualmente para resolver el conflicto
     implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 
@@ -41,13 +40,10 @@ dependencies {
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
 
-    // Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:21.1.0")
-
     // MPAndroidChart para gráficos generados por código
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
-    // Librerías estándar de Android UI y materiales
+    // Librerías estándar de Android UI y material
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")

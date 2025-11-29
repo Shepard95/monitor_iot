@@ -16,10 +16,14 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -32,38 +36,25 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializar Firebase
         auth = Firebase.auth
         db = Firebase.firestore
-
-        // Inicializar Credential Manager
         credentialManager = CredentialManager.create(this)
 
-        // Verificar si usuario ya está autenticado
         if (auth.currentUser != null) {
             navigateToMain()
             return
         }
 
-        // Configurar botones
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.btnLogin.setOnClickListener {
-            loginWithEmailPassword()
-        }
-
-        binding.btnGoogleSignIn.setOnClickListener {
-            signInWithGoogleButton()
-        }
-
+        binding.btnLogin.setOnClickListener { loginWithEmailPassword() }
+        binding.btnGoogleSignIn.setOnClickListener { signInWithGoogleButton() }
         binding.btnGoToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-
         showGoogleSignInBottomSheet()
     }
 
@@ -89,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     navigateToMain()
                 } else {
-                    Toast.makeText(baseContext, "Fallo la autenticación.", Toast.LENGTH_SHORT).show()
+                    handleEmailPasswordAuthError(task.exception)
                 }
             }
     }
@@ -167,37 +158,75 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val firebaseUser = auth.currentUser
+                    val firebaseUser = auth.currentUser!!
                     val isNewUser = task.result?.additionalUserInfo?.isNewUser == true
 
-                    if (isNewUser && firebaseUser != null) {
-                        val user = User(
-                            firebaseUser.displayName ?: "",
-                            firebaseUser.email ?: "",
-                            System.currentTimeMillis()
-                        )
-                        db.collection("usuarios").document(firebaseUser.uid).set(user)
-                            .addOnSuccessListener { navigateToMain() }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Error al guardar datos.", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                    } else {
-                        navigateToMain()
+                    if (isNewUser) {
+                        createOrUpdateUserInFirestore(firebaseUser)
                     }
+                    navigateToMain()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Fallo la autenticación con Google.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    handleGoogleAuthError(task.exception)
                 }
             }
     }
 
+    private fun createOrUpdateUserInFirestore(firebaseUser: FirebaseUser) {
+        val user = User(
+            name = firebaseUser.displayName ?: "",
+            email = firebaseUser.email ?: "",
+            createdAt = System.currentTimeMillis()
+        )
+
+        db.collection("usuarios")
+            .document(firebaseUser.uid)
+            .set(user, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d(TAG, "usuario nuevo guardado en firestore: ${firebaseUser.uid}")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "error guardando usuario nuevo en firestore", e)
+            }
+    }
+
+    private fun handleEmailPasswordAuthError(exception: Exception?) {
+        Toast.makeText(this, "error en la autenticación: ${exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleGoogleAuthError(exception: Exception?) {
+        val ex = exception as? FirebaseAuthException
+        when (ex?.errorCode) {
+            "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL" -> {
+                val email = parseEmailFromError(ex.message)
+                if (email != null) {
+                    binding.txtEmail.setText(email)
+                    binding.txtEmail.requestFocus()
+                }
+                Toast.makeText(this, "Usa email/password para esta cuenta.", Toast.LENGTH_LONG).show()
+            }
+
+            "ERROR_EMAIL_ALREADY_IN_USE" -> {
+                Toast.makeText(this, "Esta cuenta ya está registrada con Google.", Toast.LENGTH_SHORT).show()
+            }
+
+            else -> {
+                Toast.makeText(this, "Error: ${exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun parseEmailFromError(errorMessage: String?): String? {
+        errorMessage?.let {
+            val regex = Regex("address\\s*[:]\\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})")
+            val match = regex.find(it)
+            return match?.groupValues?.get(1)?.trim()
+        }
+        return null
+    }
+
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK || Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
